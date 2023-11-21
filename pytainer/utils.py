@@ -36,6 +36,7 @@ class CommandHandler(subprocess.CompletedProcess):
 
 def run_command(command):
     try:
+        command = flatten(command)
         command = " ".join(command)
         result = subprocess.run(
             command, capture_output=True, shell=True, text=True, check=True
@@ -46,3 +47,22 @@ def run_command(command):
             args=command, stderr=e.stderr, returncode=e.returncode
         )
         return result
+
+
+def flatten(lst):
+    """
+    Flatten a list of arbitrary depth.
+
+    Args:
+    lst (list): A list, potentially nested to arbitrary depth.
+
+    Returns:
+    list: A flattened version of the input list.
+    """
+    flat_list = []
+    for item in lst:
+        if isinstance(item, list):
+            flat_list.extend(flatten(item))  # Recursive call for nested lists
+        else:
+            flat_list.append(item)
+    return flat_list
