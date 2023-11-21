@@ -1,0 +1,12 @@
+Bootstrap: library
+From: alpine:latest
+
+%post
+    apk update
+
+%environment
+    export PATH=/usr/local/bin:$PATH
+    export LC_ALL=C
+
+%runscript
+    exec /bin/ash "$@"
