@@ -34,9 +34,16 @@ class CommandHandler(subprocess.CompletedProcess):
         return self.command
 
 
-def run_command(command):
+def run_command(command: str | list):
     try:
-        command = flatten(command)
+        if isinstance(command, list):
+            command = flatten(command)
+        elif isinstance(command, str):
+            command = command.split(" ")
+        else:
+            raise TypeError(
+                "The command argument must be a string or a list of strings."
+            )
         command = " ".join(command)
         result = subprocess.run(
             command, capture_output=True, shell=True, text=True, check=True
