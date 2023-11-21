@@ -44,7 +44,7 @@ def run_command(command: str | list):
         return result
     except subprocess.CalledProcessError as e:
         result = subprocess.CompletedProcess(
-            args=command, stderr=e.stderr, returncode=e.returncode
+            args=command, stdout=e.stdout, stderr=e.stderr, returncode=e.returncode
         )
         return result
 
