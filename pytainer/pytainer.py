@@ -1,6 +1,6 @@
 import shlex
 
-from .utils import run_command
+from .utils import run_command, CommandHandler
 
 APPTAINER_VERSION = "apptainer version 1.2.4-1.el7"
 
@@ -1185,7 +1185,7 @@ class Pytainer:
 
     def exec(self, command, options: PytainerOptionsExec = PytainerOptionsExec()):
         cmd = ["apptainer", "exec", options.to_string(), self.image_path, command]
-        return run_command(cmd)
+        return CommandHandler(cmd)
 
     def pull(
         self,
@@ -1195,7 +1195,7 @@ class Pytainer:
     ):
         save_path = save_path or self.image_path
         cmd = ["apptainer", "pull", options.to_string(), save_path, image_uri]
-        return run_command(cmd)
+        return CommandHandler(cmd)
 
     def build(
         self,
@@ -1204,14 +1204,14 @@ class Pytainer:
         options: PytainerOptionsBuild = PytainerOptionsBuild(),
     ):
         cmd = ["apptainer", "build", options.to_string(), image_path, definition_file]
-        return run_command(cmd)
+        return CommandHandler(cmd)
 
     def inspect(self, options: PytainerOptionsInspect = PytainerOptionsInspect()):
         cmd = ["apptainer", "inspect", options.to_string(), self.image_path]
-        return run_command(cmd)
+        return CommandHandler(cmd)
 
     def run(self, command, options: PytainerOptionsRun = PytainerOptionsRun()):
         cmd = ["apptainer", "run", options.to_string(), self.image_path, command]
-        return run_command(cmd)
+        return CommandHandler(cmd)
 
     # Additional methods can be added here for other Apptainer functionalities
