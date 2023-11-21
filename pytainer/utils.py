@@ -4,7 +4,8 @@ import subprocess
 class CommandHandler(subprocess.CompletedProcess):
     def __init__(self, command):
         self.command = command
-        self.result = run_command(self.command)
+        self.command_flatten = flatten(self.command)
+        self.result = run_command(self.command_flatten)
         self.stdout = self.result.stdout
         self.stderr = self.result.stderr
         self.returncode = self.result.returncode
@@ -36,14 +37,6 @@ class CommandHandler(subprocess.CompletedProcess):
 
 def run_command(command: str | list):
     try:
-        if isinstance(command, list):
-            command = flatten(command)
-        elif isinstance(command, str):
-            command = command.split(" ")
-        else:
-            raise TypeError(
-                "The command argument must be a string or a list of strings."
-            )
         command = " ".join(command)
         result = subprocess.run(
             command, capture_output=True, shell=True, text=True, check=True
