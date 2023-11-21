@@ -1,3 +1,5 @@
+import shlex
+
 from .utils import run_command
 
 APPTAINER_VERSION = "apptainer version 1.2.4-1.el7"
@@ -18,6 +20,9 @@ class PytainerOptions:
 
     def remove(self, option):
         self.options.remove(option)
+
+    def shell_escape(self, string):
+        return shlex.quote(string)
 
 
 class PytainerOptionsExec(PytainerOptions):
@@ -281,8 +286,9 @@ class PytainerOptionsExec(PytainerOptions):
     def drop_caps(self, caps):
         self.add(f"--drop-caps {caps}")
 
-    def env(self, env):
-        self.add(f"-e {env}")
+    def env(self, name, value, escape=True):
+        value = self.shell_escape(value) if escape else value
+        self.add(f"-e {name}={value}")
 
     def env_file(self, env_file):
         self.add(f"--env-file {env_file}")
@@ -1030,8 +1036,9 @@ class PytainerOptionsRun(PytainerOptions):
     def drop_caps(self, caps):
         self.add(f"--drop-caps {caps}")
 
-    def env(self, env):
-        self.add(f"-e {env}")
+    def env(self, name, value, escape=True):
+        value = self.shell_escape(value) if escape else value
+        self.add(f"-e {name}={value}")
 
     def env_file(self, env_file):
         self.add(f"--env-file {env_file}")
