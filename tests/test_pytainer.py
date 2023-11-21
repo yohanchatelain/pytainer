@@ -1,5 +1,6 @@
 import pytainer
 import os
+import io
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 ALPINE_DOCKER_REMOTE_IMAGE = "docker://alpine:latest"
@@ -61,6 +62,32 @@ def test_run():
     pytnr = pytainer.Pytainer(ALPINE_DOCKER_REMOTE_IMAGE)
     result = pytnr.run('echo "Hello from container"')
     assert result.returncode == 0
+
+
+def test_pytainer_option_exec():
+    options = pytainer.PytainerOptionsExec()
+    options.workdir("/home")
+    options.env("ENV_VAR", "1")
+    options.env("ENV_VAR", "2")
+    fmt = options.to_string()
+    assert fmt == "--workdir /home --env ENV_VAR=1 --env ENV_VAR=2"
+
+
+def test_pytainer_option_run():
+    options = pytainer.PytainerOptionsRun()
+    options.workdir("/home")
+    options.env("ENV_VAR", "1")
+    options.env("ENV_VAR", "2")
+    fmt = options.to_string()
+    assert fmt == "--workdir /home --env ENV_VAR=1 --env ENV_VAR=2"
+
+
+def test_pytainer_option_pull():
+    options = pytainer.PytainerOptionsPull()
+    options.force()
+    options.disable_cache()
+    _repr = options.__repr__()
+    assert _repr == "PytainerOptionsPull(--force --disable-cache)"
 
 
 if __name__ == "__main__":

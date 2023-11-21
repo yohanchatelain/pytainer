@@ -24,6 +24,12 @@ class PytainerOptions:
     def shell_escape(self, string):
         return shlex.quote(string)
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.to_string()})"
+
+    def __str__(self) -> str:
+        return self.to_string()
+
 
 class PytainerOptionsExec(PytainerOptions):
     """
@@ -288,7 +294,7 @@ class PytainerOptionsExec(PytainerOptions):
 
     def env(self, name, value, escape=True):
         value = self.shell_escape(value) if escape else value
-        self.add(f"-e {name}={value}")
+        self.add(f"--env {name}={value}")
 
     def env_file(self, env_file):
         self.add(f"--env-file {env_file}")
@@ -1038,7 +1044,7 @@ class PytainerOptionsRun(PytainerOptions):
 
     def env(self, name, value, escape=True):
         value = self.shell_escape(value) if escape else value
-        self.add(f"-e {name}={value}")
+        self.add(f"--env {name}={value}")
 
     def env_file(self, env_file):
         self.add(f"--env-file {env_file}")
